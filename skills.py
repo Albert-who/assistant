@@ -14,15 +14,6 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import screen_brightness_control as sbc
 import main
-# import pyaudio
-# import vosk
-# import sounddevice as sd
-# import json
-
-# audio = pyaudio.PyAudio()
-# model = vosk.Model('model_small')
-# device = sd.default.device
-# samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])
 
 
 my_joke = (
@@ -40,22 +31,6 @@ def micro():
             if data == 'конец':
                   return
       
-
-# тут вариант тупо в лоб 
-# def micro():
-#       stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
-#                             frames_per_buffer=8192)#, stream_callback=callback   
-      
-#       rec = vosk.KaldiRecognizer(model, samplerate)
-#       stream.start_stream()
-#       while True:
-#         data = stream.read(8192)
-#         if rec.AcceptWaveform(data) :
-#             data = json.loads(rec.Result())['text']
-#             print('распознано:', data)
-#             if data == 'конец':
-#                   voice.speaker('Тут слова')
-#                   return
 
 def night_mode():
     # Получаем доступ к аудио-устройству (в данном случае, к динамикам)
