@@ -9,9 +9,21 @@ import random
 import voice
 import requests	
 import speedtest
-# from yandex_music import Client
-# client = Client('token').init()
-# client.users_likes_tracks()[0].fetch_track()
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import screen_brightness_control as sbc
+import main
+# import pyaudio
+# import vosk
+# import sounddevice as sd
+# import json
+
+# audio = pyaudio.PyAudio()
+# model = vosk.Model('model_small')
+# device = sd.default.device
+# samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])
+
 
 my_joke = (
     'Вчера помыл окна, теперь у меня рассвет на два часа раньше...',
@@ -22,10 +34,60 @@ my_joke = (
 
     )
 
+def micro():
+      while True:
+            data = main.micro(main.stream, main.rec)
+            if data == 'конец':
+                  return
+      
+
+# def micro():
+#       stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
+#                             frames_per_buffer=8192)#, stream_callback=callback   
+      
+#       rec = vosk.KaldiRecognizer(model, samplerate)
+#       stream.start_stream()
+#       while True:
+#         data = stream.read(8192)
+#         if rec.AcceptWaveform(data) :
+#             data = json.loads(rec.Result())['text']
+#             print('распознано:', data)
+#             if data == 'конец':
+#                   voice.speaker('Тут слова')
+#                   return
+
+def night_mode():
+    # Получаем доступ к аудио-устройству (в данном случае, к динамикам)
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(
+        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+    audio_volume = cast(interface, POINTER(IAudioEndpointVolume))
+    # Устанавливаем громкость на определенный уровень (0.0 - 1.0)
+    audio_volume.SetMasterVolumeLevelScalar(0.5, None)
+
+    # Установка громкости (значение от 0.0 до 1.0)
+
+    # Устанавливаем яркость экрана (значение от 0 до 100)
+    sbc.set_brightness(50)
+    voice.speaker('Протокол активирован')
+
+def day_mode():
+    # Получаем доступ к аудио-устройству (в данном случае, к динамикам)
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(
+        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+    audio_volume = cast(interface, POINTER(IAudioEndpointVolume))
+    # Устанавливаем громкость на определенный уровень (0.0 - 1.0)
+    audio_volume.SetMasterVolumeLevelScalar(1.0, None)
+
+    # Установка громкости (значение от 0.0 до 1.0)
+
+    # Устанавливаем яркость экрана (значение от 0 до 100)
+    sbc.set_brightness(100)
+    voice.speaker('Протокол активирован')
+
 def music():
       pass
-
-
 
 
 def browser():

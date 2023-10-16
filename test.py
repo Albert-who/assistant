@@ -17,6 +17,12 @@ for voice in voices:    # голоса и параметры каждого
 # Пол: None
 # Возраст: None
 # ------
+# Имя: IVONA 2 Tatyana OEM
+# ID: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\Tatyana RSI Harpo 22kHz
+# Язык(и): []
+# Пол: None
+# Возраст: None
+# ------
 # Имя: Microsoft David Desktop - English (United States)
 # ID: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0
 # Язык(и): []
@@ -40,4 +46,17 @@ for voice in voices:    # голоса и параметры каждого
 # Язык(и): []
 # Пол: None
 # Возраст: None
-# PS C:\Users\ganiz\OneDrive\Рабочий стол\джарвис\assistant> 
+# ------
+# Имя: Vocalizer Expressive Milena Harpo 22kHz
+# ID: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\Vocalizer Expressive milena premium-high 22kHz
+# Язык(и): []
+# Пол: None
+# Возраст: None
+# ------
+# Имя: Vocalizer Expressive Yuri Harpo 22kHz
+# ID: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\Vocalizer Expressive yuri premium-high 22kHz
+# Язык(и): []
+# Пол: None
+# Возраст: None
+
+import pyautogui #скрины и работа с экраном чекнуть инфу в инете 

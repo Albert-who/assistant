@@ -3,12 +3,12 @@ import pyttsx3
 
 engine = pyttsx3.init()
 # id
-voice_id = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_RU-RU_IRINA_11.0'
+voice_id = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\Vocalizer Expressive yuri premium-high 22kHz'
 engine.setProperty('voice', voice_id)
 engine.setProperty('rate', 160)				#скорость речи
 
 # engine.say('и тебе привет')
-engine.runAndWait()
+# engine.runAndWait()
 
 def speaker(text):
 	'''Озвучка текста'''

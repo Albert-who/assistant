@@ -69,6 +69,20 @@ def recognize(data, vectorizer, clf):
     except Exception as e:
         print('Ошибка при обработке распознанной речи:', e)
 
+def micro(stream, rec):
+    # stream.start_stream()       
+    data = stream.read(8192)
+    if rec.AcceptWaveform(data) :
+        data = json.loads(rec.Result())['text']
+        print('распознано:', data)
+        return data
+    
+
+stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
+                            frames_per_buffer=8192)#, stream_callback=callback   
+rec = vosk.KaldiRecognizer(model, samplerate)
+
+
 def main():
     '''
     Обучаем матрицу ИИ и постоянно слушаем микрофон
@@ -93,17 +107,21 @@ def main():
         else:
             voice.speaker("Доброй ночи!")
 
-        stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
-                            frames_per_buffer=8192)#, stream_callback=callback   
+        # stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
+        #                     frames_per_buffer=8192)#, stream_callback=callback   
        
-        rec = vosk.KaldiRecognizer(model, samplerate)
+        # rec = vosk.KaldiRecognizer(model, samplerate)
         stream.start_stream()
             
+        # while True:
+        #     data = stream.read(8192)
+        #     if rec.AcceptWaveform(data) :
+        #         data = json.loads(rec.Result())['text']
+        #         print('распознано:', data)
+        #         recognize(data, vectorizer, clf)
         while True:
-            data = stream.read(8192)
-            if rec.AcceptWaveform(data) :
-                data = json.loads(rec.Result())['text']
-                print('распознано:', data)
+            data = micro(stream, rec)
+            if data:
                 recognize(data, vectorizer, clf)
                     
                     
