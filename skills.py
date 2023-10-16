@@ -41,6 +41,7 @@ def micro():
                   return
       
 
+# тут вариант тупо в лоб 
 # def micro():
 #       stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
 #                             frames_per_buffer=8192)#, stream_callback=callback   
