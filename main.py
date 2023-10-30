@@ -17,7 +17,7 @@ vad = webrtcvad.Vad(3)  # создаем экземпляр класса для 
 audio = pyaudio.PyAudio()
 FLAG =True 
 q = queue.Queue()
-model = vosk.Model('model_small')
+model = vosk.Model('c:/users/dmitry/desktop/assistant-main/model_small')
 device = sd.default.device
 samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])
 
@@ -58,30 +58,34 @@ def recognize(data, vectorizer, clf):
             # print(func_name)
 
             # запуск функции из skills
-            exec(func_name + '()')  
+            if func_name in ['calc', 'who_is_it']:
+                exec(func_name + '(data)')
+            else:
+                exec(func_name + '()')
 
             FLAG = True          
-        else: 
+        else:
             FLAG= False
             voice.speaker('Я слушаю')
             FLAG=True
 
     except Exception as e:
         print('Ошибка при обработке распознанной речи:', e)
+        
+stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True,
+                    frames_per_buffer=8192)
+
+rec = vosk.KaldiRecognizer(model, samplerate)
 
 def micro(stream, rec):
-    # stream.start_stream()       
     data = stream.read(8192)
-    if rec.AcceptWaveform(data) :
+    if rec.AcceptWaveform(data):
         data = json.loads(rec.Result())['text']
         print('распознано:', data)
         return data
     
-
-stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
-                            frames_per_buffer=8192)#, stream_callback=callback   
-rec = vosk.KaldiRecognizer(model, samplerate)
-
+def get_string():
+    return micro(stream, rec)
 
 def main():
     '''
@@ -107,23 +111,12 @@ def main():
         else:
             voice.speaker("Доброй ночи!")
 
-        # stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
-        #                     frames_per_buffer=8192)#, stream_callback=callback   
-       
-        # rec = vosk.KaldiRecognizer(model, samplerate)
         stream.start_stream()
-            
-        # while True:
-        #     data = stream.read(8192)
-        #     if rec.AcceptWaveform(data) :
-        #         data = json.loads(rec.Result())['text']
-        #         print('распознано:', data)
-        #         recognize(data, vectorizer, clf)
+
         while True:
             data = micro(stream, rec)
             if data:
                 recognize(data, vectorizer, clf)
-                    
                     
     except Exception as e:
         print('Произошла ошибка:', e)

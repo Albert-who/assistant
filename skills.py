@@ -4,17 +4,17 @@ import sys
 import subprocess
 import keyboard
 import apikey
-import pyautogui
+#import pyautogui
 import random
 import voice
-import requests	
-import speedtest
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-import screen_brightness_control as sbc
-import main
-
+import requests
+import json
+import num_text
+import wikipedia
+#import speedtest
+# from yandex_music import Client
+# client = Client('token').init()
+# client.users_likes_tracks()[0].fetch_track()
 
 my_joke = (
     'Вчера помыл окна, теперь у меня рассвет на два часа раньше...',
@@ -24,43 +24,6 @@ my_joke = (
     'Что говорит программист на свидании? - Языки программирования меняются, но мой интерес к тебе - нет!',
 
     )
-
-def micro():
-      while True:
-            data = main.micro(main.stream, main.rec)
-            if data == 'конец':
-                  return
-      
-
-def night_mode():
-    # Получаем доступ к аудио-устройству (в данном случае, к динамикам)
-    devices = AudioUtilities.GetSpeakers()
-    interface = devices.Activate(
-        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    audio_volume = cast(interface, POINTER(IAudioEndpointVolume))
-    # Устанавливаем громкость на определенный уровень (0.0 - 1.0)
-    audio_volume.SetMasterVolumeLevelScalar(0.5, None)
-
-    # Установка громкости (значение от 0.0 до 1.0)
-
-    # Устанавливаем яркость экрана (значение от 0 до 100)
-    sbc.set_brightness(50)
-    voice.speaker('Протокол активирован')
-
-def day_mode():
-    # Получаем доступ к аудио-устройству (в данном случае, к динамикам)
-    devices = AudioUtilities.GetSpeakers()
-    interface = devices.Activate(
-        IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    audio_volume = cast(interface, POINTER(IAudioEndpointVolume))
-    # Устанавливаем громкость на определенный уровень (0.0 - 1.0)
-    audio_volume.SetMasterVolumeLevelScalar(1.0, None)
-
-    # Установка громкости (значение от 0.0 до 1.0)
-
-    # Устанавливаем яркость экрана (значение от 0 до 100)
-    sbc.set_brightness(100)
-    voice.speaker('Протокол активирован')
 
 def music():
       pass
@@ -99,33 +62,33 @@ def close_presentation():
 
 def next_slide():
     '''Перейти на следующий слайд'''
-    try:
-        pyautogui.press('right')
-    except:
-	    voice.speaker('Похоже тебе самому придется перелестнуть слайд')
+    #try:
+        #pyautogui.press('right')
+    #except:
+	#    voice.speaker('Похоже тебе самому придется перелестнуть слайд')
 
 def previous_slide():
     '''Перейти на предыдущий слайд'''
-    try:
-        pyautogui.press('left')
-    except:
-	    voice.speaker('Похоже тебе самому придется вернуть слайд')
+    #try:
+        #pyautogui.press('left')
+    #except:
+	#    voice.speaker('Похоже тебе самому придется вернуть слайд')
 
 def start_slideshow():
     '''Запустить режим демонстрации'''
-    try:
-        pyautogui.press('f5')
+    #try:
+    #    pyautogui.press('f5')
 	    
-    except:
-        voice.speaker('У меня не получилось включить режим демонстрации')
+    #except:
+    #    voice.speaker('У меня не получилось включить режим демонстрации')
 
 def stop_slideshow():
     '''Остановить режим демонстрации'''
-    try:
-        pyautogui.press('esc')
+    #try:
+    #    pyautogui.press('esc')
 	    
-    except:
-	    voice.speaker('У меня не получилось выключить режим демонстрации')
+    #except:
+	#    voice.speaker('У меня не получилось выключить режим демонстрации')
 
 
 def speak():
@@ -169,12 +132,136 @@ def restart_program():
 
 
 def check_internet_speed():
-    st = speedtest.Speedtest()
-    download_speed = st.download() / 1000000 # скорость загрузки в мегабайтах в секунду
-    upload_speed = st.upload() / 1000000 # скорость выгрузки в мегабайтах в секунду
-    ping = st.results.ping # пинг
+    #st = speedtest.Speedtest()
+    download_speed = 0 #st.download() / 1000000 # скорость загрузки в мегабайтах в секунду
+    upload_speed = 0 #st.upload() / 1000000 # скорость выгрузки в мегабайтах в секунду
+    ping = 0 #st.results.ping # пинг
     print(f"Скорость загрузки: {download_speed:.2f} Мб/с")
     print(f"Скорость выгрузки: {upload_speed:.2f} Мб/с")
     print(f"Пинг: {ping} мс")
 
 check_internet_speed
+
+
+def calc(datas):
+    try:
+        datas = datas.replace(' сколько будет ', '')
+        math_opers = ['плюс', 'прибавить', 'минус', 'вычесть', 'умножить на', 'делить на']
+        oper =''
+        for i in math_opers:
+            if i in datas:
+                if oper != '':
+                     print('Ошибка: слишком много операторов')
+                     voice.speaker('я могу выполнить только одно действие')
+                     return
+                oper = i
+        
+        if oper == '':
+            voice.speaker('я вас не расслышала')
+            print('я вас не расслышала')
+            return
+        
+        num1 = num_text.str_to_num(datas.split(' '+oper+' ')[0])
+        num2 = num_text.str_to_num(datas.split(' '+oper+' ')[1])
+        result = 0
+        match oper:
+            case 'плюс' | 'прибавить': result = num1 + num2
+            case 'минус' | 'вычесть': result = num1 - num2
+            case 'умножить на': result = num1 * num2
+            case 'делить на':
+                    if num2 != 0:
+                        result = num1 // num2
+                    else:
+                        voice.speaker('ошибка, деление на ноль')
+                        print('ошибка, деление на ноль')
+                        return
+        
+        voice.speaker('будет '+num_text.num_to_str(result))
+        print('будет '+num_text.num_to_str(result))
+    except:
+        voice.speaker('повторите запрос')
+        print('повторите запрос')
+
+
+def gen_some_number():
+    phrases = ['пусть будет', 'например', '', 'я загадала']
+    number = random.randint(1, 100)
+    
+    result = phrases[random.randint(0, len(phrases)-1)] + ' ' + str(number)
+    print(result)
+    voice.speaker(result)
+    
+
+def gen_some_name():
+    phrases = ['пусть будет', 'например', '', 'я загадала']
+    fnames = open('desktop/assistant-main/names.txt', 'r')
+    index = random.randint(0, 493)
+    for i in range(index):
+        fnames.readline()
+    name = fnames.readline().split('\n')[0]
+    fnames.close()
+    result = phrases[random.randint(0, len(phrases)-1)]+name
+    print(result)
+    voice.speaker(result)
+
+
+def who_is_it():
+    from main import get_string
+    try:
+        data = get_string()
+        gender = ''
+        if 'кто такой' in data:
+            gender = 'male'
+        else:
+            gender = 'female'
+        data = data.replace(' кто такой ', '').replace(' кто такая ', '')
+        result = wikipedia.summary(data, sentences=4)
+        if gender == 'female':
+            result = result.replace('род.', 'родилась')
+        else:
+            result = result.replace('род.', 'родился')
+        if result == None:
+            print('джарвис: я ничего не нашла по вашему запросу')
+            voice.speaker('я ничего не нашла по вашему запросу')
+            return
+        print(result)
+        voice.speaker(result)
+    except:
+        print('джарвис: я вас не поняла')
+        voice.speaker('я вас не поняла')
+
+wikipedia.set_lang('ru')
+
+def get_dollar_cost():
+    #url = r"https://www.alphavantage.co/query?function = CURRENCY_EXCHANGE_RATE &from_currency=USD &to_currency=RUB &apikey=9NZ3WF59OUSSNOGB"
+    data = requests.get('https://free.currconv.com/api/v7/convert?apiKey=9NZ3WF59OUSSNOGB&q=USD_RUB&compact=ultra').json()
+    print (data)
+
+
+def run_cities():
+    from cities import start
+    start()
+
+
+def whats_time():
+    import datetime
+    hour = datetime.datetime.now().hour
+    minute = datetime.datetime.now().minute
+    hour_end = ''
+    minute_end = ''
+    if hour in range(5, 19):
+         hour_end = 'ов'
+    elif hour % 20 > 1:
+         hour_end = 'a'
+
+    if (minute % 10 == 1) & (minute != 11):
+        minute_end = 'а'
+    elif (minute % 10 < 5) & (minute not in range(10, 15)):
+        minute_end = 'ы'
+
+    print(F'джарвис: сейчас {hour}:{minute}')
+    voice.speaker(F'сейчас {hour} час{hour_end}, {minute} минут{minute_end}')
+
+def run_akinator():
+    from my_akinator import start
+    start()
