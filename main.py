@@ -78,6 +78,7 @@ def micro(stream, rec):
         return data
     
 
+
 stream = audio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, 
                             frames_per_buffer=8192)#, stream_callback=callback   
 rec = vosk.KaldiRecognizer(model, samplerate)
