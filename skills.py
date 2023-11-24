@@ -162,9 +162,17 @@ def memorise():
 def remind():
     voice.speaker(f"Напоминаю {memories.readMemories()}")
 
+def delMemories():
+    from Memories.memories import startDel
+    startDel()
+
 def writeNotes():
     from Notes.notes import start
     start()
+
+def delNotes():
+    from Notes.notes import startDel
+    startDel()
 
 def readNotes():
     i = notes.readNotes()

@@ -32,7 +32,11 @@ def writeMemories(memo: str, dt: datetime):
             writer.writerow(headers)
             writer.writerow([memo, dt])
             file.close()
-    
+
+def delMemo(index: int):
+    data = pd.read_csv(NOTES, on_bad_lines="skip", delimiter=";", encoding='cp1251')
+    data = data.drop(data.index[index]).to_csv(NOTES, index=False, encoding='cp1251', sep=';')
+
 
 def remindMe():
     if os.path.exists(NOTES):
@@ -53,13 +57,23 @@ def getDateTime(data: str):
     translator = Translator()
     extractor = NumberExtractor()
     
-    try: 
-        extractor.replace_groups(data)
+    try:
         enDateTime = translator.translate(extractor.replace_groups(data), src='auto', dest='en')
         dt = datetime.strptime(enDateTime.text, '%B %d, %Y')
     except:
         print("Не получилось преобразовать в дату")
     return dt
+
+# Получение datetime
+def getNum(data: str):
+    i: int = 0
+    extractor = NumberExtractor()
+    
+    try: 
+        i = extractor.replace_groups(data)
+    except:
+        print("Не получилось преобразовать в число")
+    return i
    
 #вывести сообщение в консоль и произнести его
 def message(msg):
@@ -112,6 +126,34 @@ def start():
                 break
         except Exception as e:
             print(f"Обкек {e}")
+
+def startDel():
+    stop_words = ['стоп', 'хватит', 'прекрати', 'давай закончим']
+    while True:
+        # message("Что будем удалять? Назовите номер записи")
+        message("Что будем удалять?")
+
+        #получаем ответ
+        data = get_answer()
+
+        # Если не пусто, то запомнить
+        if data != '':
+            index = getNum(data)
+            i = 0
+            try:
+                i = int(index)
+            except:
+                print("Не удается преобразовать в int")
+
+            if i > 0:
+                delMemo(i - 1)
+                message("Забыл")
+                break
+            else:
+                print("Не получилось")
+        # Если стоп-слово, то выходим
+        elif data in stop_words:
+            break
         
 if __name__ == '__main__':
     start()
