@@ -12,9 +12,7 @@ import webrtcvad
 import pyaudio
 import librosa
 import numpy as np
-import settings
 
-settings.init()
 vad = webrtcvad.Vad(3)  # создаем экземпляр класса для подавления шума
 audio = pyaudio.PyAudio()
 FLAG =True 
@@ -35,7 +33,6 @@ def recognize(data, vectorizer, clf):
 
         # удаляем имя бота из текста
         data = data.replace(list(trg)[0], '')
-        settings.data = data
 
         if data != '':
             global FLAG

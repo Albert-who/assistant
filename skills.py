@@ -14,7 +14,6 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import screen_brightness_control as sbc
 import main
-import settings
 import Notes.notes as notes
 import Memories.memories as memories
 
@@ -157,10 +156,6 @@ def weather():
 		voice.speaker('Произошла ошибка при попытке запроса к ресурсу API, проверь код')
             
 def memorise():
-    voice.speaker("Запоминаю")
-    # if settings.data.find("запомни") != -1:
-    #     memories.writeMemories(settings.data.replace('запомни', ''))
-    #     # settings.datawo = settings.data.replace('запомни', '')
     from Memories.memories import start
     start()
 
@@ -168,9 +163,8 @@ def remind():
     voice.speaker(f"Напоминаю {memories.readMemories()}")
 
 def writeNotes():
-    voice.speaker("Достаю ручку")
-    if settings.data.find("добавь в заметки") != -1:
-        notes.writeNotes(settings.data.replace('добавь в заметки', ''))
+    from Notes.notes import start
+    start()
 
 def readNotes():
     i = notes.readNotes()
